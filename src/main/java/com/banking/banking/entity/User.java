@@ -29,10 +29,10 @@ public class User {
 //    private BigDecimal accountBalance;
     @OneToOne(cascade = CascadeType.ALL)
     private Account account;
-    @ManyToMany
-    private List<Recipient> recipients;
-    @OneToMany(mappedBy = "user")
-    private List<Transaction> transactions;
+//    @ManyToMany
+//    private List<Recipient> recipients;
+//    @OneToMany(mappedBy = "user")
+//    private List<Transaction> transactions;
     private String email;
     private String phoneNumber;
     private String alternativePhoneNumber;

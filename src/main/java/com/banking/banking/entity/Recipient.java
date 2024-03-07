@@ -15,8 +15,8 @@ public class Recipient {
     private Long id;
     private String name;
     private String AccountNumber;
-    @ManyToMany(mappedBy = "recipients")
-    private List<User> user;
-    @OneToMany(mappedBy = "recipient")
-    private List<Transaction> transactions;
+//    @ManyToMany(mappedBy = "recipients")
+//    private List<User> user;
+//    @OneToMany(mappedBy = "recipient")
+//    private List<Transaction> transactions;
 }

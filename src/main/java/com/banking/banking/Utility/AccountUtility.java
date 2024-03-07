@@ -18,6 +18,9 @@ public class AccountUtility {
     public static final String INSUFFICIENT_CODE = "006";
     public static final String ACCOUNT_DEBITED_SUCCESS_MESSAGE = " Account has been  successfully debited  ";
     public static final String ACCOUNT_DEBITED_CODE = "007";
+    public static final String TRANSFER_SUCCESS_CODE="008";
+    public static final String TRANSFER_SUCCESS_MESSAGE="Transfer successfully completed ";
+
 
     public static String generateAccountNumber() {
         //current year * sixdigits
