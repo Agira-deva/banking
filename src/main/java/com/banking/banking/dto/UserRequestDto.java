@@ -35,6 +35,10 @@ public class UserRequestDto {
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
     private String email;
+    @NotBlank(message = "Password cannot be null or empty")
+    @Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$", message = "Password must contain at least one digit, one lowercase, one uppercase letter, one special character, and no whitespace")
+    private  String password;
     @NotBlank(message = "Number cannot be null or empty")
     @Size(min = 10,max = 10,message = "Number cannot be more than 10 digits")
     @Pattern(regexp = "^\\d{10}$")

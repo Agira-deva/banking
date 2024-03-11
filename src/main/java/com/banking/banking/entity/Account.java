@@ -25,7 +25,7 @@ public class Account {
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime modifiedAt;
-    @OneToOne(mappedBy = "account")
-    private User user;
+//    @OneToOne(mappedBy = "account")
+//    private User user;
 
 }

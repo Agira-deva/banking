@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
@@ -14,5 +16,7 @@ public class TransactionRequest {
     private BigDecimal amount;
     private String transactionType;
     private String accountNumber;
+    private LocalDate createdAt;
+    private LocalDate modifiedAt;
     private  String status;
 }

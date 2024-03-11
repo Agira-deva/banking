@@ -17,6 +17,7 @@ public class TransactionImp implements TransactionService{
                 .transactionType(transaction.getTransactionType())
                 .accountNumber(transaction.getAccountNumber())
                 .amount(transaction.getAmount())
+                .createdAt(transaction.getCreatedAt())
                 .status("SUCCESS")
                 .build();
         transactionalRepository.save(transaction1);

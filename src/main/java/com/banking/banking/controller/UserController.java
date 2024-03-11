@@ -17,12 +17,18 @@ public class UserController {
       return userService.createAccount(user);
 }
 
+ @PostMapping("login")
+ public BankResponseDto login(@RequestBody LoginDto loginDto ){
+      return userService.login(loginDto);
+ }
+
    @GetMapping("balanceEnquiry")
     public BankResponseDto balanceEnquiry(@RequestBody EnquiryRequestDto enquiry){
         return userService.balanceEnquiry(enquiry);
    }
     @PostMapping("credit")
-    public BankResponseDto creditAccount(@RequestBody CreditDebitRequest creditDebitRequest){
+    public BankResponseDto creditAccount(@RequestBody CreditDebitRequest creditDebitRequest, @RequestHeader String token){
+        System.out.println(token);
         return userService.creditAccount(creditDebitRequest);
     }
 
