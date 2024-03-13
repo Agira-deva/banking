@@ -13,6 +13,13 @@ public class GlobalException {
     public ResponseEntity<String> customerBankingException(CustomBankingException customBankingException){
         return new ResponseEntity<>(customBankingException.getMessage(), HttpStatus.NOT_FOUND);
     }
-
+    @ExceptionHandler(BalanceNotSufficientException.class)
+    public ResponseEntity<String> balanceNotSufficientException(BalanceNotSufficientException balanceNotSufficientException){
+        return new ResponseEntity<>(balanceNotSufficientException.getMessage(), HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<String> invalidInputException(InvalidInputException invalidInputException){
+        return new ResponseEntity<>(invalidInputException.getMessage(), HttpStatus.NOT_FOUND);
+    }
 
 }

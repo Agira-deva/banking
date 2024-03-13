@@ -1,6 +1,5 @@
 package com.banking.banking.dto;
 
-import jakarta.annotation.security.DenyAll;
 import lombok.*;
 
 @Getter
@@ -9,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 public class LoginDto {
 
-    public String email;
-    public String password;
+    public String EmailId;
+    public String Password;
 
 }
