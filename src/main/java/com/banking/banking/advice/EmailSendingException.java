@@ -9,14 +9,6 @@ public class EmailSendingException extends RuntimeException{
     public EmailSendingException(String message, Throwable cause) {
         super(message, cause);
     }
-//    public InsufficientFundsException(String message) {
-//        super(message);
-//    }
-//
-//    public InsufficientFundsException(String message, Throwable cause) {
-//        super(message, cause);
-//    }
-
 
 
 }

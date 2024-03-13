@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user/")
+@CrossOrigin("*")
 public class UserController {
 
     @Autowired
-    UserService userService;
+   private UserService userService;
     @PostMapping
    public BankResponseDto createAccount(@RequestBody UserRequestDto user){
       return userService.createAccount(user);
@@ -27,8 +28,8 @@ public class UserController {
         return userService.balanceEnquiry(enquiry);
    }
     @PostMapping("credit")
-    public BankResponseDto creditAccount(@RequestBody CreditDebitRequest creditDebitRequest, @RequestHeader String token){
-        System.out.println(token);
+    public BankResponseDto creditAccount(@RequestBody CreditDebitRequest creditDebitRequest){
+//        System.out.println(token);
         return userService.creditAccount(creditDebitRequest);
     }
 

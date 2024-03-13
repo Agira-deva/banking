@@ -25,7 +25,8 @@ public class BankingTokenProvider {
     public String generateToken(Authentication authentication) {
         String userName = authentication.getName();
         Date currentDate = new Date();
-        Date expiryDate = new Date(currentDate.getTime() + jwtExpiration);
+
+        Date expiryDate = new Date(currentDate.getTime() + 10 * 60 * 60 * 1000);
 
         return Jwts.builder()
                 .setSubject(userName)
@@ -34,6 +35,7 @@ public class BankingTokenProvider {
                 .signWith(key())
                 .compact();
     }
+
 
     private Key key() {
         byte[] bytes = Decoders.BASE64.decode(jwtSecret);
@@ -62,5 +64,6 @@ public class BankingTokenProvider {
             throw new RuntimeException(exception);
         }
     }
+
 
 }

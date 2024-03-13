@@ -101,11 +101,13 @@ public class UserServiceImp implements UserService {
 //        }
     }
 
-
+@Override
     public BankResponseDto login(LoginDto loginDto){
         Authentication authentication=null;
+        System.out.println("email" + loginDto.getEmail());
+        System.out.println(loginDto.getPassword());
         authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(),loginDto.getPassword()));
-
+        System.out.println(authentication);
 
         EmailDetails loginAlerts= EmailDetails.builder()
                 .subject("You're logged in")
