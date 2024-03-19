@@ -8,8 +8,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -32,7 +34,8 @@ public class User implements UserDetails {
     private  Account account;
     @OneToMany(cascade =CascadeType.ALL ,fetch = FetchType.LAZY,mappedBy = "user")
     private List<Transaction>  transaction;
-    private Role role;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Role> roles;
     private String email;
     private String password;
     private String phoneNumber;
@@ -44,7 +47,11 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        roles.stream().map(role -> {
+            return grantedAuthorities.add(new CustomGrantedAuthority(role));
+        });
+        return grantedAuthorities;
     }
 
     @Override

@@ -12,34 +12,36 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Autowired
-   private UserService userService;
+    private UserService userService;
+
     @PostMapping
-   public BankResponseDto createAccount(@RequestBody UserRequestDto user){
-      return userService.createAccount(user);
-}
+    public BankResponseDto createAccount(@RequestBody UserRequestDto user) {
+        return userService.createAccount(user);
+    }
 
- @PostMapping("login")
- public BankResponseDto login(@RequestBody LoginDto loginDto ){
-      return userService.login(loginDto);
- }
+    @PostMapping("login")
+    public BankResponseDto login(@RequestBody LoginDto loginDto) {
+        return userService.login(loginDto);
+    }
 
-   @GetMapping("balanceEnquiry")
-    public BankResponseDto balanceEnquiry(@RequestBody EnquiryRequestDto enquiry){
+    @GetMapping("balanceEnquiry")
+    public BankResponseDto balanceEnquiry(@RequestBody EnquiryRequestDto enquiry) {
         return userService.balanceEnquiry(enquiry);
-   }
+    }
+
     @PostMapping("credit")
-    public BankResponseDto creditAccount(@RequestBody CreditDebitRequest creditDebitRequest){
-//        System.out.println(token);
+    public BankResponseDto creditAccount(@RequestBody CreditDebitRequest creditDebitRequest) {
         return userService.creditAccount(creditDebitRequest);
     }
 
     @PostMapping("debit")
-    public  BankResponseDto debitAccount(@RequestBody CreditDebitRequest creditDebitRequest){
+    public BankResponseDto debitAccount(@RequestBody CreditDebitRequest creditDebitRequest) {
         return userService.debitAccount(creditDebitRequest);
     }
+
     @PostMapping("transfer")
-    public BankResponseDto transfer(@RequestBody TransferRequest transferRequest){
+    public BankResponseDto transfer(@RequestBody TransferRequest transferRequest) {
         return userService.transfer(transferRequest);
     }
-   }
+}
 

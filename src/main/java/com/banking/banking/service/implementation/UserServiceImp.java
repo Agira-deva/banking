@@ -25,6 +25,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -84,11 +86,13 @@ public class UserServiceImp implements UserService {
                             .status("ACTIVE")
                             .build())
                     .email(userRequest.getEmail())
-                    .password(passwordEncoder.encode(userRequest.getPassword()))
+                   .password(passwordEncoder.encode(userRequest.getPassword()))
                     .phoneNumber(userRequest.getPhoneNumber())
                     .alternativePhoneNumber(userRequest.getAlternativePhoneNumber())
-                    .role(Role.valueOf("ROLE_ADMIN"))
+                    .roles(List.of(new Role("Admin")))
+//                    .role(Role.ROLE_ADMIN)
                     .build();
+
             User savedUser = userRepository.save(newUser);
 
             EmailDetails emailDetails = EmailDetails.builder()
@@ -146,7 +150,7 @@ public class UserServiceImp implements UserService {
         } catch (AuthenticationException authenticationException) {
             return BankResponseDto.builder()
                     .responseCode("Login Failed")
-                    .responseMessage("Invalid Credentials"+authenticationException.getMessage())
+                    .responseMessage("Invalid Credentials Or "+authenticationException.getMessage())
                     .build();
     }catch (Exception exception) {
             return BankResponseDto.builder()

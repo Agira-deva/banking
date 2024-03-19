@@ -25,8 +25,7 @@ public class BankingTokenProvider {
     public String generateToken(Authentication authentication) {
         String userName = authentication.getName();
         Date currentDate = new Date();
-
-        Date expiryDate = new Date(currentDate.getTime() + 10 * 60 * 60 * 1000);
+        Date expiryDate = new Date(currentDate.getTime() + jwtExpiration);
 
         return Jwts.builder()
                 .setSubject(userName)
