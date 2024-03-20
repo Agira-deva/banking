@@ -24,7 +24,7 @@ public class UserController {
         return userService.login(loginDto);
     }
 
-    @GetMapping("balanceEnquiry")
+    @PostMapping("balanceEnquiry")
     public BankResponseDto balanceEnquiry(@RequestBody EnquiryRequestDto enquiry) {
         return userService.balanceEnquiry(enquiry);
     }

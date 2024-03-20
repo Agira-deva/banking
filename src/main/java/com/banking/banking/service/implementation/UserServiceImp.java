@@ -130,6 +130,8 @@ public class UserServiceImp implements UserService {
     @Override
     public BankResponseDto login(LoginDto loginDto) {
         try {
+             User user= userRepository.findByEmailAccount(loginDto.getEmailId());
+             String accountNumber=user.getAccount().getAccountNumber();
             Authentication authentication = null;
             System.out.println("email" + loginDto.getEmailId());
             System.out.println(loginDto.getPassword());
@@ -145,6 +147,11 @@ public class UserServiceImp implements UserService {
             return BankResponseDto.builder()
                     .responseCode("Login Success")
                     .responseMessage(bankingTokenProvider.generateToken(authentication))
+                    .accountInfo(AccountInfo.builder()
+                            .accountName(user.getFirstName() + " " + user.getLastName() + " " + user.getOtherName())
+                            .accountBalance(user.getAccount().getAccountBalance())
+                            .accountNumber(accountNumber) // Set account number here
+                            .build())
                     .build();
 
         } catch (AuthenticationException authenticationException) {
@@ -152,7 +159,7 @@ public class UserServiceImp implements UserService {
                     .responseCode("Login Failed")
                     .responseMessage("Invalid Credentials Or "+authenticationException.getMessage())
                     .build();
-    }catch (Exception exception) {
+        }catch (Exception exception) {
             return BankResponseDto.builder()
                     .responseCode("UNEXPECTED_ERROR_CODE")
                     .responseMessage("An unexpected error occurred: " + exception.getMessage())
@@ -160,6 +167,7 @@ public class UserServiceImp implements UserService {
                     .build();
         }
     }
+
 
 
     @Override
