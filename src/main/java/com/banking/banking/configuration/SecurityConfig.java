@@ -60,7 +60,7 @@ public class SecurityConfig  {
                                 .requestMatchers(HttpMethod.POST, "/api/user/", "/api/user/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/user/**").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/api/user/**").authenticated()
-                                .requestMatchers(HttpMethod.GET, "/bankStatement").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/bankStatement?**").authenticated()
                                 .anyRequest().permitAll()
                                 .and()
                                 .cors().disable()

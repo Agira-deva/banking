@@ -3,7 +3,6 @@ package com.banking.banking.service.implementation;
 import com.banking.banking.Utility.AccountUtility;
 import com.banking.banking.advice.BalanceNotSufficientException;
 import com.banking.banking.advice.EmailSendingException;
-import com.banking.banking.advice.InvalidInputException;
 import com.banking.banking.configuration.BankingTokenProvider;
 import com.banking.banking.dto.*;
 import com.banking.banking.entity.Account;
@@ -25,7 +24,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,12 +67,6 @@ public class UserServiceImp implements UserService {
                         .build();
 
             }
-//            if (userRequest.getFirstName() == null || userRequest.getFirstName().isEmpty() ||
-//                    userRequest.getLastName() == null || userRequest.getLastName().isEmpty() ||
-//                    userRequest.getEmail() == null || userRequest.getEmail().isEmpty() ||
-//                    userRequest.getPassword() == null || userRequest.getPassword().isEmpty()) {
-//                throw new InvalidInputException("Invalid user input. Please provide all required information.");
-//            }
             User newUser = User.builder().firstName(userRequest.getFirstName())
                     .lastName(userRequest.getLastName())
                     .otherName(userRequest.getOtherName())
@@ -86,7 +78,7 @@ public class UserServiceImp implements UserService {
                             .status("ACTIVE")
                             .build())
                     .email(userRequest.getEmail())
-                   .password(passwordEncoder.encode(userRequest.getPassword()))
+                    .password(passwordEncoder.encode(userRequest.getPassword()))
                     .phoneNumber(userRequest.getPhoneNumber())
                     .alternativePhoneNumber(userRequest.getAlternativePhoneNumber())
                     .roles(List.of(new Role("Admin")))
@@ -115,10 +107,10 @@ public class UserServiceImp implements UserService {
         } catch (EmailSendingException exception) {
             return BankResponseDto.builder()
                     .responseCode("ERROR_CODE_EMAIL")
-                    .responseMessage("An error occurred while sending the email."+exception.getMessage())
+                    .responseMessage("An error occurred while sending the email." + exception.getMessage())
                     .accountInfo(null)
                     .build();
-        }catch (Exception exception) {
+        } catch (Exception exception) {
             return BankResponseDto.builder()
                     .responseCode("UNEXPECTED_ERROR_CODE")
                     .responseMessage("An unexpected error occurred: " + exception.getMessage())
@@ -130,8 +122,9 @@ public class UserServiceImp implements UserService {
     @Override
     public BankResponseDto login(LoginDto loginDto) {
         try {
-             User user= userRepository.findByEmailAccount(loginDto.getEmailId());
-             String accountNumber=user.getAccount().getAccountNumber();
+            User user = userRepository.findByEmailAccount(loginDto.getEmailId());
+            String accountNumber = user.getAccount().getAccountNumber();
+            String password = user.getPassword();
             Authentication authentication = null;
             System.out.println("email" + loginDto.getEmailId());
             System.out.println(loginDto.getPassword());
@@ -157,9 +150,9 @@ public class UserServiceImp implements UserService {
         } catch (AuthenticationException authenticationException) {
             return BankResponseDto.builder()
                     .responseCode("Login Failed")
-                    .responseMessage("Invalid Credentials Or "+authenticationException.getMessage())
+                    .responseMessage("Invalid Credentials Or " + authenticationException.getMessage())
                     .build();
-        }catch (Exception exception) {
+        } catch (Exception exception) {
             return BankResponseDto.builder()
                     .responseCode("UNEXPECTED_ERROR_CODE")
                     .responseMessage("An unexpected error occurred: " + exception.getMessage())
@@ -169,13 +162,12 @@ public class UserServiceImp implements UserService {
     }
 
 
-
     @Override
     public BankResponseDto balanceEnquiry(EnquiryRequestDto enquiryRequestDto) {
         Optional<User> user = userRepository.existByAccountNumber(enquiryRequestDto.getAccountNumber());
         try {
             if (user.isEmpty()) {
-                throw new AccountNotFoundException("Account not found with the provided account number"+enquiryRequestDto.getAccountNumber());
+                throw new AccountNotFoundException("Account not found with the provided account number" + enquiryRequestDto.getAccountNumber());
             }
 //        User foundUser = userRepository.findByAccountNumber(enquiryRequestDto.getAccountNumber());
             User foundUser = user.get();
@@ -188,13 +180,13 @@ public class UserServiceImp implements UserService {
                             .accountName(foundUser.getFirstName() + " " + foundUser.getLastName() + " " + foundUser.getOtherName())
                             .build())
                     .build();
-        }catch(AccountNotFoundException accountNotFoundException){
+        } catch (AccountNotFoundException accountNotFoundException) {
             return BankResponseDto.builder()
                     .responseCode(AccountUtility.ACCOUNT_NOT_EXIST_CODE)
                     .responseMessage(AccountUtility.ACCOUNT_NOT_EXIST_MESSAGE)
                     .accountInfo(null)
                     .build();
-        }catch (AuthenticationException exception) {
+        } catch (AuthenticationException exception) {
             return BankResponseDto.builder()
                     .responseCode("AUTHENTICATION_ERROR_CODE")
                     .responseMessage("Authentication failed: " + exception.getMessage())
@@ -229,7 +221,7 @@ public class UserServiceImp implements UserService {
             userRepository.save(credit);
 
             TransactionRequest transaction = TransactionRequest.builder()
-                    .accountNumber(credit.getAccount().getAccountNumber())
+                    .fromAccount(credit.getAccount().getAccountNumber())
                     .transactionType("CREDIT")
                     .amount(creditDebitRequest.getAccountBalance())
                     .build();
@@ -259,13 +251,13 @@ public class UserServiceImp implements UserService {
         } catch (EmailSendingException exception) {
             return BankResponseDto.builder()
                     .responseCode("ERROR_CODE")
-                    .responseMessage("An error occurred while sending the email."+exception.getMessage())
+                    .responseMessage("An error occurred while sending the email." + exception.getMessage())
                     .accountInfo(null)
                     .build();
         } catch (Exception exception) {
             return BankResponseDto.builder()
                     .responseCode("ERROR_CODE")
-                    .responseMessage("An error occurred while processing the request."+exception.getMessage())
+                    .responseMessage("An error occurred while processing the request." + exception.getMessage())
                     .accountInfo(null)
                     .build();
         }
@@ -313,7 +305,7 @@ public class UserServiceImp implements UserService {
                         .build();
                 emailService.sendEmailAlerts(emailDetails);
                 TransactionRequest transaction = TransactionRequest.builder()
-                        .accountNumber(debit.getAccount().getAccountNumber())
+                        .fromAccount(debit.getAccount().getAccountNumber())
                         .transactionType("DEBIT")
 //                   .amount(creditDebitRequest.getAccountBalance())
                         .amount(debit.getAccount().getAccountBalance())
@@ -334,13 +326,13 @@ public class UserServiceImp implements UserService {
         } catch (EmailSendingException exception) {
             return BankResponseDto.builder()
                     .responseCode("ERROR_CODE")
-                    .responseMessage("An error occurred while sending the email."+exception.getMessage())
+                    .responseMessage("An error occurred while sending the email." + exception.getMessage())
                     .accountInfo(null)
                     .build();
         } catch (Exception exception) {
             return BankResponseDto.builder()
                     .responseCode("ERROR_CODE")
-                    .responseMessage("An error occurred while processing the request."+exception.getMessage())
+                    .responseMessage("An error occurred while processing the request." + exception.getMessage())
                     .accountInfo(null)
                     .build();
         }
@@ -351,6 +343,7 @@ public class UserServiceImp implements UserService {
         try {
 
             Optional<User> destinationAccountExist = userRepository.existByAccountNumber(transferRequest.getDestinationAccountNumber());
+            String destAccount = destinationAccountExist.get().getAccount().getAccountNumber();
             if (destinationAccountExist.isEmpty()) {
                 return BankResponseDto.builder()
                         .responseCode(AccountUtility.ACCOUNT_NOT_EXIST_CODE)
@@ -359,6 +352,7 @@ public class UserServiceImp implements UserService {
                         .build();
             }
             Optional<User> sourceAccountUser = userRepository.existByAccountNumber(transferRequest.getSourceAccountNumber());
+            String sourceAccount = sourceAccountUser.get().getAccount().getAccountNumber();
             if (transferRequest.getAmount().compareTo(sourceAccountUser.get().getAccount().getAccountBalance()) > 0) {
                 return BankResponseDto.builder()
                         .responseCode(AccountUtility.INSUFFICIENT_CODE)
@@ -380,6 +374,7 @@ public class UserServiceImp implements UserService {
 
             Optional<User> destinationAccountUser = userRepository.existByAccountNumber(transferRequest.getDestinationAccountNumber());
             User destinationUser = destinationAccountExist.get();
+            String destinationAccount = destinationAccountUser.get().getAccount().getAccountNumber();
             destinationUser.getAccount().setAccountBalance(destinationUser.getAccount().getAccountBalance().add(transferRequest.getAmount()));
             userRepository.save(destinationUser);
 //        String destinationUserName= destinationUser.getFirstName()+destinationUser.getLastName()+destinationUser.getOtherName();
@@ -390,7 +385,8 @@ public class UserServiceImp implements UserService {
                     .build();
             emailService.sendEmailAlerts(creditAlert);
             TransactionRequest transaction = TransactionRequest.builder()
-                    .accountNumber(destinationUser.getAccount().getAccountNumber())
+                    .toAccount(destinationUser.getAccount().getAccountNumber())
+                    .fromAccount(sourceAccount)
                     .transactionType("Transfer credit")
                     .amount(transferRequest.getAmount())
                     .build();
@@ -398,24 +394,26 @@ public class UserServiceImp implements UserService {
             return BankResponseDto.builder()
                     .responseCode(AccountUtility.TRANSFER_SUCCESS_CODE)
                     .responseMessage(AccountUtility.TRANSFER_SUCCESS_MESSAGE)
-                    .accountInfo(null)
+                    .accountInfo(AccountInfo.builder()
+                            .accountNumber(destinationAccount)
+                            .build())
                     .build();
         } catch (TransactionException exception) {
             return BankResponseDto.builder()
                     .responseCode("ERROR_CODE")
-                    .responseMessage("An error occurred while processing the transaction."+exception.getMessage())
+                    .responseMessage("An error occurred while processing the transaction." + exception.getMessage())
                     .accountInfo(null)
                     .build();
         } catch (EmailSendingException emailSendingException) {
             return BankResponseDto.builder()
                     .responseCode("ERROR_CODE")
-                    .responseMessage("An error occurred while sending the email."+emailSendingException.getMessage())
+                    .responseMessage("An error occurred while sending the email." + emailSendingException.getMessage())
                     .accountInfo(null)
                     .build();
         } catch (Exception exception) {
             return BankResponseDto.builder()
                     .responseCode("ERROR_CODE")
-                    .responseMessage("An error occurred while processing the request!!! Please check the value entered in the fields are valid."+exception.getMessage())
+                    .responseMessage("An error occurred while processing the request!!! Please check the value entered in the fields are valid." + exception.getMessage())
                     .accountInfo(null)
                     .build();
         }

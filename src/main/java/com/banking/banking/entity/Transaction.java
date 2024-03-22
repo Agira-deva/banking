@@ -23,7 +23,8 @@ public class  Transaction  {
     private String transactionId;
     private BigDecimal amount;
     private String transactionType;
-    private String accountNumber;
+    private String toAccountNumber;
+    private String fromAccount;
     private  String status;
     @ManyToOne
     private User user;

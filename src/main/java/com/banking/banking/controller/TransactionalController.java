@@ -19,9 +19,13 @@ public class TransactionalController {
     @Autowired
     private BankStatementService bankStatementService;
 
-    @GetMapping()
+    @GetMapping("/pdf")
     private List<Transaction> generateBankStatement(@RequestParam String accountNumber,@RequestParam String startDate,@RequestParam String endDate) throws DocumentException, FileNotFoundException, MessagingException {
         return bankStatementService.generateStatement(accountNumber, startDate, endDate);
+    }
+    @GetMapping("/history")
+    private List<Transaction> getTransactionsByDateRange(@RequestParam String accountNumber,@RequestParam String startDate,@RequestParam String endDate){
+        return bankStatementService.getTransactionsByDateRange(accountNumber, startDate, endDate);
     }
 
 }

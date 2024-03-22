@@ -15,7 +15,8 @@ import java.time.LocalDate;
 public class TransactionRequest {
     private BigDecimal amount;
     private String transactionType;
-    private String accountNumber;
+    private String fromAccount;
+    private String toAccount;
     private LocalDate createdAt;
     private LocalDate modifiedAt;
     private  String status;

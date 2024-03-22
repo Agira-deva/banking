@@ -6,10 +6,9 @@ import com.banking.banking.repository.TransactionalRepository;
 import jakarta.transaction.InvalidTransactionException;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+
 @Component
 public class TransactionImp implements TransactionService{
    @Autowired
@@ -20,7 +19,8 @@ public class TransactionImp implements TransactionService{
         try {
             Transaction transaction1 = Transaction.builder()
                     .transactionType(transaction.getTransactionType())
-                    .accountNumber(transaction.getAccountNumber())
+                    .toAccountNumber(transaction.getToAccount())
+                    .fromAccount(transaction.getFromAccount())
                     .amount(transaction.getAmount())
                     .createdAt(transaction.getCreatedAt())
                     .status("SUCCESS")
